@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Index = () => {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSearch = async () => {
-        console.log("Search button clicked"); // Add this line to confirm function execution
+    console.log("Search button clicked"); // Add this line to confirm function execution
     try {
       const response = await axios.get(
         `https://www.googleapis.com/customsearch/v1?key=YOUR_API_KEY&cx=YOUR_CX_ID&q=${query}&searchType=image`
       );
       setSearchResults(response.data.items);
+      setIsModalOpen(true);
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
@@ -40,16 +49,23 @@ const Index = () => {
         />
         <Button onClick={handleSearch}>Search</Button>
       </div>
-      <div className="grid grid-cols-3 gap-4 mt-4">
-        {searchResults.map((result, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <img src={result.link} alt={result.title} className="w-32 h-32 object-cover" />
-            <Button onClick={() => downloadImage(result.link)} className="mt-2">
-              Download
-            </Button>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Search Results</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-3 gap-4 mt-4">
+            {searchResults.map((result, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <img src={result.link} alt={result.title} className="w-32 h-32 object-cover" />
+                <Button onClick={() => downloadImage(result.link)} className="mt-2">
+                  Download
+                </Button>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
