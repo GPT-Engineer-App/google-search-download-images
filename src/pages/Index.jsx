@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,14 +17,10 @@ const Index = () => {
   const handleSearch = async () => {
     console.log("Search button clicked"); // Add this line to confirm function execution
     try {
-      const response = await fetch(
+      const response = await axios.get(
         `https://www.googleapis.com/customsearch/v1?key=YOUR_API_KEY&cx=YOUR_CX_ID&q=${query}&searchType=image`
       );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setSearchResults(data.items);
+      setSearchResults(response.data.items);
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error fetching search results:", error);
