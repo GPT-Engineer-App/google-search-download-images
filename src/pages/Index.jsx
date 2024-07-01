@@ -7,6 +7,7 @@ const Index = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   const handleSearch = async () => {
+        console.log("Search button clicked"); // Add this line to confirm function execution
     try {
       const response = await axios.get(
         `https://www.googleapis.com/customsearch/v1?key=YOUR_API_KEY&cx=YOUR_CX_ID&q=${query}&searchType=image`
